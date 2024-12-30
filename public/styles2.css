@@ -1,0 +1,209 @@
+[data-theme="light"] {
+    --color-bg: white;
+    --color-navbar: #202020;
+    --color-header-text:white;
+    --color-todo-done: #f0f0f0;
+    --color-doing: white;
+    --color-column-titles: black;
+}
+[data-theme="dark"] {
+    --color-bg: #202020;
+    --color-navbar: white;
+    --color-header-text:black;
+    --color-todo-done: #3b3b3b;
+    --color-doing: #202020;
+    --color-column-titles: white;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: var(--color-bg);
+    transition: all 500ms ease-in-out;
+}
+
+header {
+    transition: all 500ms ease-in-out;
+    color: var(--color-header-text);
+    background-color: var(--color-navbar);
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 0.5rem 5rem;
+    /* width: 100vw; */
+    box-sizing: border-box;
+}
+h1 {
+    font-size: x-large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+}
+
+.userInputs {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+#addCard {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: 2rem;
+}
+#addCard input {
+    color: black;
+    background-color: white;
+    height: inherit;
+}
+#cardTitle {
+    width: 20em;
+}
+#cardColor {
+    width: 8em;
+}
+#addButton {
+    background-color: #008787;
+    color: white;
+    padding: 0.25rem 1rem;
+    height: inherit;
+}
+
+#mode {
+    background-color: inherit;
+    border-width: 0;
+    /* position: absolute;
+    right: 0.5rem; */
+}
+
+#board {
+    /* width: 100%; */
+    height: 100%;
+    min-height: 100vh;
+    padding: 0 5rem;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 0;
+}
+.column {
+    /* border: 1mm solid black; */
+    padding: 1rem 0.5rem;
+    padding-bottom: 3rem;
+    width: 100%;
+    /* height: inherit; */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+    overflow: auto;
+}
+.column h2 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+    color: var(--color-column-titles);
+}
+#todo, #done {
+    transition: all 500ms ease-in-out;
+    background-color: var(--color-todo-done);
+}
+#doing {
+    transition: all 500ms ease-in-out;
+    background-color: var(--color-doing);
+}
+.card {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    position: relative;
+}
+.card h3 {
+    margin: 0;
+    margin-right: 7rem;
+}
+
+.card .buttons {
+    visibility: hidden;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0;
+}
+/* .card button {
+    border: 1mm solid black;
+} */
+.card:hover .buttons {
+    visibility: visible;
+}
+
+.darkColor {
+    color: white;
+}
+.darkColor textarea { 
+    color: white;
+}
+.darkColor button {
+    filter:invert();
+}
+
+.moving {
+    border: 2px;
+    border-color: var(--color-navbar);
+    border-style: solid;
+}
+
+.blankSpace {
+    /* visibility: hidden; */
+    /* height: 1.5in;
+    width: 100%; */
+    z-index: -1;
+}
+.dragged {
+    border: 2px var(--color-column-titles) solid;
+}
+
+.hide {
+    transition: 0.01s;
+    transform: translateX(-9999px);
+}
+
+@media (max-width: 800px) {
+    body {
+        width: 100vw;
+    }
+    header {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .userInputs {
+        justify-content: space-between;
+    }
+    #addCard {
+        width: 85%;
+    };
+    #cardTitle {
+        width: 70%;
+    }
+    #cardColor {
+        width: 35%;
+        border-radius: 0;
+    }
+    #board {
+        flex-direction: column;
+        padding: 1rem 1rem;
+    }
+    .column {
+        padding-bottom: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        overflow: inherit;
+        height: fit-content;
+    }
+}
