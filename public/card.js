@@ -1,6 +1,10 @@
+import Storage from "./storage.js";
+
 const NO_DESCRIPTION_TEXT = "(No description)";
 export default class Card {
   constructor(title, color) {
+    const storage = new Storage();
+
     let templateCard = document.querySelector(".template");
     let clone = templateCard.cloneNode(true); 
     clone.classList.remove("template");
@@ -19,49 +23,34 @@ export default class Card {
       this.moverObject.stopMoving();
       this.card.remove();
 
-      let cardID = this.moverObject.getCardIDFromLS(this.card, this.column);
-      let cardsLS = JSON.parse(localStorage.getItem("cards"));
-      let cDeleted = cardsLS.splice(cardID, 1)[0];
-      for (let c of cardsLS)
-      {
-        if (c["cardOrder"] > cDeleted["cardOrder"])
-        {
-          c["cardOrder"] -= 1;
-        }
-      }
-
-      localStorage.setItem("cards", JSON.stringify(cardsLS));
+      storage.deleteCard(this.card, this.column)
     });
 
     const edit_button = this.card.querySelector(".edit");
+    const text_area = this.card.querySelector(".editDescription")
+    const description = this.card.querySelector(".description")
+
     edit_button.addEventListener ("click", (event) => {
       event.target;
       this.moverObject.stopMoving();
-      let description = this.card.querySelector(".description")
+      
       description.classList.add("hidden");
-
-      let text_area = this.card.querySelector(".editDescription")
       text_area.classList.remove("hidden");
 
       if (description.textContent !== NO_DESCRIPTION_TEXT) 
         text_area.textContent = description.textContent;
       text_area.focus();
       text_area.select();
-      
-      text_area.addEventListener("blur", (event)=> {
-        event.target;
-        let desc = text_area.value; 
-        
-        let cardID = this.moverObject.getCardIDFromLS(this.card, this.column);
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
-        cardsLS[cardID]["cardDescription"] = desc;
-        localStorage.setItem("cards", JSON.stringify(cardsLS));
-        
-        this.setDescription(desc || NO_DESCRIPTION_TEXT);
+    });
+    text_area.addEventListener("blur", (event)=> {
+      event.target;
+      let desc = text_area.value; 
 
-        description.classList.remove("hidden");
-        text_area.classList.add("hidden");
-      })
+      storage.editCardDescription(desc, this.card, this.column)
+      this.setDescription(desc || NO_DESCRIPTION_TEXT);
+
+      description.classList.remove("hidden");
+      text_area.classList.add("hidden");
     });
 
     const move_button = this.card.querySelector(".startMove");
@@ -76,110 +65,6 @@ export default class Card {
         this.moverObject.startMoving(this.card);
       }
     });
-    
-    /*
-    this.card.addEventListener("dragstart", (event) => {
-      if (document.querySelector(".dragged") !== null) 
-      {
-        document.querySelector(".dragged").classList.remove("dragged");
-      }
-      
-      event.dataTransfer.setData('text/html', this.card.outerHTML); // May be used for cloning/dropping
-      event.dataTransfer.setDragImage(this.card, 0, 0);
-      this.card.classList.add('dragging');
-      this.card.style.opacity = '0.5';
-      setTimeout(() => {
-        this.card.style.display = 'none';
-      }, 0);
-
-    });
-    this.card.addEventListener("dragend", (event) => {
-      event.target;
-      this.card.classList.remove('dragging');
-      this.clearAllBlanks();
-      this.card.style.display = "";
-      this.card.style.opacity = "1";
-    });
-
-    document.addEventListener("dragover", (event) => {
-      if (event.target.classList.contains("card") || event.target.classList.contains("column") || event.target.classList.contains("blankSpace")) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = "move";
-      }
-    });
-    this.card.addEventListener("dragenter", (event) => {
-      event.preventDefault();
-      if (!document.querySelector(".blankSpace") && event.target.classList.contains("card")) 
-      {
-        let templateCard = document.querySelector(".template");
-        let blankSpace = templateCard.cloneNode(true);
-        blankSpace.classList.remove("template");
-        blankSpace.setAttribute("draggable", "false");
-        blankSpace.classList.add("blankSpace");
-        event.target.parentNode.insertBefore(blankSpace, event.target);
-
-        blankSpace.addEventListener("dragover", (event) => {
-          event.preventDefault();
-        });
-
-      }
-    });
-    this.card.addEventListener("dragleave", (event) => {
-      if (!event.target.classList.contains("blankSpace"))
-      {
-        setTimeout(this.clearAllBlanks(), 1000);
-      }
-    });
-
-    document.addEventListener("drop", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const draggingCard = document.querySelector('.dragging');
-
-      if (event.target.classList.contains("blankSpace")) {
-        event.target.parentNode.insertBefore(draggingCard, event.target);
-        draggingCard.classList.add("dragged"); 
-      }
-      else if (event.target.classList.contains("column")) {
-        if (document.querySelector(".blankSpace") !== null) 
-        {
-          let blank = document.querySelector(".blankSpace");
-          blank.parentNode.insertBefore(draggingCard, blank);
-          draggingCard.classList.add("dragged"); 
-        }
-        else 
-        {
-          event.target.appendChild(draggingCard);
-          draggingCard.classList.add("dragged"); 
-        }
-      } 
-      else if (event.target.classList.contains("card")) {
-        event.target.parentNode.insertBefore(draggingCard, event.target);
-        draggingCard.classList.add("dragged"); 
-      }
-      else if (event.target.parentNode.classList.contains("card")) {
-        event.target.parentNode.parentNode.insertBefore(draggingCard, event.target.parentNode);
-        draggingCard.classList.add("dragged"); 
-      }
-      else if (event.target.parentNode.parentNode.classList.contains("card")) {
-        event.target.parentNode.parentNode.parentNode.insertBefore(draggingCard, event.target.parentNode.parentNode);
-        draggingCard.classList.add("dragged"); 
-      }
-      this.clearAllBlanks();
-
-      draggingCard.style.display = "";
-      draggingCard.style.opacity = '1';
-    });
-
-    document.addEventListener("click", (event) => {
-      event.target;
-      let draggedCard = document.querySelector(".dragged");
-      if (draggedCard !== null) 
-      {
-        draggedCard.classList.remove("dragged");
-      }
-    });
-    */
   }
 
   addToCol(colElem = "todo", mover) {
