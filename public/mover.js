@@ -1,21 +1,17 @@
-/* Text to add to the move here button */
 const MOVE_HERE_TEXT = "— Move here —";
 
 export default class Mover {
   constructor() {
   }
 
-  //Moving with the Move Buttons
   startMoving(card) {
     this.movedCard = card;
     card.classList.add("moving"); 
-    //console.log(card.classList);
     let move_button = document.createElement("button");
     move_button.classList.add("moveHere")
     move_button.textContent = MOVE_HERE_TEXT; 
 
     let columns = document.querySelectorAll(".column"); 
-    //console.log(columns);
     columns.forEach((element) => {
       let mb_clone = move_button.cloneNode(true); 
       element.appendChild(mb_clone);
@@ -33,7 +29,6 @@ export default class Mover {
     move_buttons.forEach ((element) => {
       element.addEventListener("click", (event) => {
         event.target;
-        // console.log(element.nextSibling);
         this.updateLocalStorage(element);
         
         element.parentNode.insertBefore(card, element);
@@ -62,12 +57,10 @@ export default class Mover {
   updateLocalStorage(moveButton) {
     let cardsLS = JSON.parse(localStorage.getItem("cards"));
     let movedCardID = this.getCardIDFromLS(this.movedCard);
-    console.log("--BEFORE--");
     console.log(movedCardID);
     console.log(cardsLS[movedCardID]);
 
     let newColumn = moveButton.parentNode.id;
-    //console.log(movedCardID);
 
     let numCardsBeforeMB = 0;
     let prevCard;
@@ -89,14 +82,11 @@ export default class Mover {
     else 
     {
       let prevCardID = this.getCardIDFromLS(prevCard);
-      //if (prevCardID === 0) { prevCardID += 1; }
-      //prevCardID += 1;
-
+      
       let cTemp = cardsLS.splice(movedCardID, 1)[0];
       cardsLS.splice(prevCardID, 0, cTemp);
       movedCardID = prevCardID;
     }
-    console.log("--AFTER--");
     console.log(movedCardID);
     console.log(cardsLS[movedCardID]);
 
@@ -106,7 +96,6 @@ export default class Mover {
 
   getCardIDFromLS (card, column = card.parentNode.id) {
     let cardsLS = JSON.parse(localStorage.getItem("cards"));
-
     let cTitle = card.querySelector(".title").textContent;
 
     //RGB to hex conversion from StackOverflow: 
@@ -119,19 +108,11 @@ export default class Mover {
       cDescription = null;
     else 
       cDescription = card.querySelector(".description").textContent; 
-
-    //let currentCardAttributes = (this.cTitle, this.cColor, this.column, cDescription)
-
-    for (let c of cardsLS) {
-      //let cAttributes = (c["cardTitle"], c["cardColor"], c["cardColumn"], c["cardDescription"])
+      for (let c of cardsLS) {
       if (cTitle === c["cardTitle"] && cColor === c["cardColor"] && column === c["cardColumn"] && cDescription === c["cardDescription"]) 
       {
         return cardsLS.indexOf(c);
       }
     }
   }
-
-  //Moving with the Drag and Drop
-
-  
 }

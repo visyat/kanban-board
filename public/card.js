@@ -91,12 +91,4 @@ export default class Card {
       this.card.classList.add("darkColor");
   }
 
-  clearAllBlanks() {
-    setTimeout ( () => {
-      document.querySelectorAll(".blankSpace").forEach( (el) => {
-        el.remove();
-      });
-    }, 500);
-  }
-
 }
