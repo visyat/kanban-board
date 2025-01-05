@@ -30,6 +30,18 @@ export default class Card {
     const text_area = this.card.querySelector(".editDescription")
     const description = this.card.querySelector(".description")
 
+    description.addEventListener("dblclick", (event) => {
+      event.target;
+      this.moverObject.stopMoving();
+      
+      description.classList.add("hidden");
+      text_area.classList.remove("hidden");
+
+      if (description.textContent !== NO_DESCRIPTION_TEXT) 
+        text_area.textContent = description.textContent;
+      text_area.focus();
+      text_area.select();
+    })
     edit_button.addEventListener ("click", (event) => {
       event.target;
       this.moverObject.stopMoving();
