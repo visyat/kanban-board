@@ -1,12 +1,4 @@
-/* The text to use when description is empty */
 const NO_DESCRIPTION_TEXT = "(No description)";
-
-/*
-LINTING NOTES:
-* Have to restructure code to get rid of extraneous 'this' calls; I don't think I'm using them correctly
-* Have to ensure that the event parameters passed into the event handlers are used (gives linting errors)
-*/
-
 export default class Card {
   constructor(title, color) {
     let templateCard = document.querySelector(".template");
@@ -17,8 +9,6 @@ export default class Card {
     clone.style.background = color;
 
     this.card = clone;
-    // this.cTitle = title;
-    // this.cColor = color;
 
     this.setTextColor(color);
     this.setDescription();
@@ -83,12 +73,11 @@ export default class Card {
       else
       {
         this.moverObject.stopMoving();
-        this.moverObject.startMoving(this.card); 
-        //this.cardID = this.moverObject.updateCardID();
-        //console.log(this.cardID);
+        this.moverObject.startMoving(this.card);
       }
     });
     
+    /*
     this.card.addEventListener("dragstart", (event) => {
       if (document.querySelector(".dragged") !== null) 
       {
@@ -190,15 +179,10 @@ export default class Card {
         draggedCard.classList.remove("dragged");
       }
     });
+    */
   }
 
-  // clearAllBlanks() {
-  //   const blanks = document.querySelectorAll(".blankSpace");
-  //   blanks.forEach(blank => blank.remove());
-  // }
-
   addToCol(colElem = "todo", mover) {
-    //console.log(this.mover);
     this.moverObject = mover;
     this.column = colElem;
     let col = document.getElementById(colElem); 
