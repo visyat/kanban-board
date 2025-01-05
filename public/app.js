@@ -40,16 +40,16 @@ export default class App {
       const title = document.getElementById("cardTitle").value;
       const color = document.getElementById("cardColor").value;
 
-      const cardID = storage.addCard(title, color);
-      this.addCard("todo", title, color, cardID);
+      storage.addCard(title, color);
+      this.addCard("todo", title, color);
 
       document.getElementById("cardTitle").value = "";
       document.getElementById("cardColor").value = "#9edbd7";
     });
   }
 
-  addCard(col, title, color, cardID) {
-    let newCard = new Card(title, color, cardID);
+  addCard(col, title, color) {
+    let newCard = new Card(title, color);
     let mover = new Mover();
     newCard.addToCol(col, mover);
     return newCard;

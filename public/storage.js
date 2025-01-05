@@ -23,7 +23,6 @@ export default class Storage {
         };
         cards.push(cardData);
         localStorage.setItem("cards", JSON.stringify(cards));
-        return cards.length // this is used to ID the card for some reason; need to update ...
     }
 
 }
