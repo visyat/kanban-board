@@ -27,7 +27,7 @@ export default class Card {
     });
 
     const edit_button = this.card.querySelector(".edit");
-    const text_area = this.card.querySelector(".editDescription")
+    const edit_desc_area = this.card.querySelector(".editDescription")
     const description = this.card.querySelector(".description")
 
     description.addEventListener("dblclick", (event) => {
@@ -35,34 +35,34 @@ export default class Card {
       this.moverObject.stopMoving();
       
       description.classList.add("hidden");
-      text_area.classList.remove("hidden");
+      edit_desc_area.classList.remove("hidden");
 
       if (description.textContent !== NO_DESCRIPTION_TEXT) 
-        text_area.textContent = description.textContent;
-      text_area.focus();
-      text_area.select();
+        edit_desc_area.textContent = description.textContent;
+      edit_desc_area.focus();
+      edit_desc_area.select();
     })
     edit_button.addEventListener ("click", (event) => {
       event.target;
       this.moverObject.stopMoving();
       
       description.classList.add("hidden");
-      text_area.classList.remove("hidden");
+      edit_desc_area.classList.remove("hidden");
 
       if (description.textContent !== NO_DESCRIPTION_TEXT) 
-        text_area.textContent = description.textContent;
-      text_area.focus();
-      text_area.select();
+        edit_desc_area.textContent = description.textContent;
+      edit_desc_area.focus();
+      edit_desc_area.select();
     });
-    text_area.addEventListener("blur", (event)=> {
+    edit_desc_area.addEventListener("blur", (event)=> {
       event.target;
-      let desc = text_area.value; 
+      let desc = edit_desc_area.value; 
 
       storage.editCardDescription(desc, this.card, this.column)
       this.setDescription(desc || NO_DESCRIPTION_TEXT);
 
       description.classList.remove("hidden");
-      text_area.classList.add("hidden");
+      edit_desc_area.classList.add("hidden");
     });
 
     const move_button = this.card.querySelector(".startMove");
@@ -76,6 +76,30 @@ export default class Card {
         this.moverObject.stopMoving();
         this.moverObject.startMoving(this.card);
       }
+    });
+
+    const title_obj = this.card.querySelector(".title");
+    const edit_title_area = this.card.querySelector(".editTitle");
+    title_obj.addEventListener("dblclick", (event) => {
+      event.target;
+      this.moverObject.stopMoving();
+      
+      title_obj.classList.add("hidden");
+      edit_title_area.classList.remove("hidden");
+
+      edit_title_area.textContent = title_obj.textContent;
+      edit_title_area.focus();
+      edit_title_area.select();
+    });
+    edit_title_area.addEventListener("blur", (event)=> {
+      event.target;
+      let title = edit_title_area.value; 
+
+      storage.editTitle(title, this.card, this.column)
+      this.card.querySelector(".title").textContent = title;
+
+      title_obj.classList.remove("hidden");
+      edit_title_area.classList.add("hidden");
     });
   }
 

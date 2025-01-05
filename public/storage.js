@@ -60,4 +60,11 @@ export default class Storage {
         cardsLS[cardID]["cardDescription"] = desc;
         localStorage.setItem("cards", JSON.stringify(cardsLS));
     }
+    editTitle(title, card, column) {
+        const cardID = this.getCardID(card, column);
+
+        let cardsLS = JSON.parse(localStorage.getItem("cards"));
+        cardsLS[cardID]["cardTitle"] = title;
+        localStorage.setItem("cards", JSON.stringify(cardsLS));
+    }
 }
