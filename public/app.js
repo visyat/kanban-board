@@ -1,10 +1,12 @@
 import Card from "./card.js";
 import Mover from "./mover.js";
+import Storage from "./storage.js"
 
 export default class App {
   constructor() {
+    const storage = new Storage();
 
-    const localStorageTheme = localStorage.getItem("theme");
+    const localStorageTheme = storage.getTheme();
     const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
     let currentThemeSetting = this.calculateSettingAsThemeString({ localStorageTheme, systemSettingDark });
     document.querySelector("html").setAttribute("data-theme", currentThemeSetting);
@@ -12,10 +14,7 @@ export default class App {
 
     window.addEventListener("load", (event) => {
       event.target;
-      if (localStorage.getItem("cards") === null) {
-        localStorage.setItem("cards", "[]");
-      }
-      const cards = JSON.parse(localStorage.getItem("cards"));
+      const cards = storage.getAllCards()
       if (cards.length !== 0) {
         for (const c in cards) {
           let oldCard = this.addCard(cards[c]["cardColumn"], cards[c]["cardTitle"], cards[c]["cardColor"], c);
@@ -31,7 +30,7 @@ export default class App {
       document.querySelector("html").setAttribute("data-theme", newTheme);
       document.getElementById("mode").firstChild.setAttribute("src", this.getModeIcon(newTheme));
 
-      localStorage.setItem("theme", newTheme);
+      storage.setTheme(newTheme)
       currentThemeSetting = newTheme;
     });
     
@@ -41,18 +40,8 @@ export default class App {
       const title = document.getElementById("cardTitle").value;
       const color = document.getElementById("cardColor").value;
 
-      let cards = JSON.parse(localStorage.getItem("cards"));
-
-      this.addCard("todo", title, color, cards.length);
-
-      let cardData = {
-        cardTitle: `${title}`, 
-        cardColor: `${color}`,
-        cardColumn: "todo",
-        cardDescription: null
-      };
-      cards.push(cardData);
-      localStorage.setItem("cards", JSON.stringify(cards));
+      const cardID = storage.addCard(title, color);
+      this.addCard("todo", title, color, cardID);
 
       document.getElementById("cardTitle").value = "";
       document.getElementById("cardColor").value = "#9edbd7";
