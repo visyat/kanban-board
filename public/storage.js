@@ -41,27 +41,27 @@ export default class Storage {
             for (let c of cardsLS) {
             if (cTitle === c["cardTitle"] && cColor === c["cardColor"] && column === c["cardColumn"] && cDescription === c["cardDescription"]) 
             {
-            return cardsLS.indexOf(c);
+                return cardsLS.indexOf(c);
             }
         }
     }
 
-    deleteCard(card, column) {
-        const cardID = this.getCardID(card, column)
+    deleteCard(card) {
+        const cardID = this.getCardID(card)
 
         let cardsLS = JSON.parse(localStorage.getItem("cards"));
         cardsLS.splice(cardID, 1);
         localStorage.setItem("cards", JSON.stringify(cardsLS));
     }
-    editCardDescription(desc, card, column) {
-        const cardID = this.getCardID(card, column);
+    editCardDescription(desc, card) {
+        const cardID = this.getCardID(card);
 
         let cardsLS = JSON.parse(localStorage.getItem("cards"));
         cardsLS[cardID]["cardDescription"] = desc;
         localStorage.setItem("cards", JSON.stringify(cardsLS));
     }
-    editTitle(title, card, column) {
-        const cardID = this.getCardID(card, column);
+    editTitle(title, card) {
+        const cardID = this.getCardID(card);
 
         let cardsLS = JSON.parse(localStorage.getItem("cards"));
         cardsLS[cardID]["cardTitle"] = title;

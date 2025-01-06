@@ -21,9 +21,9 @@ export default class Card {
     del_button.addEventListener ("click", (event) => {
       event.target;
       this.moverObject.stopMoving();
+      storage.deleteCard(this.card)
+      
       this.card.remove();
-
-      storage.deleteCard(this.card, this.column)
     });
 
     const edit_button = this.card.querySelector(".edit");
@@ -58,7 +58,7 @@ export default class Card {
       event.target;
       let desc = edit_desc_area.value; 
 
-      storage.editCardDescription(desc, this.card, this.column)
+      storage.editCardDescription(desc, this.card)
       this.setDescription(desc || NO_DESCRIPTION_TEXT);
 
       description.classList.remove("hidden");
@@ -95,7 +95,7 @@ export default class Card {
       event.target;
       let title = edit_title_area.value; 
 
-      storage.editTitle(title, this.card, this.column)
+      storage.editTitle(title, this.card)
       this.card.querySelector(".title").textContent = title;
 
       title_obj.classList.remove("hidden");
@@ -105,7 +105,6 @@ export default class Card {
 
   addToCol(colElem = "todo", mover) {
     this.moverObject = mover;
-    this.column = colElem;
     let col = document.getElementById(colElem); 
     this.moverObject.stopMoving();
     col.appendChild(this.card);
