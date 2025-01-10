@@ -67,4 +67,40 @@ export default class Storage {
         cardsLS[cardID]["cardTitle"] = title;
         localStorage.setItem("cards", JSON.stringify(cardsLS));
     }
+
+    moveCard(moveButton, movedCard) {
+        let cardsLS = JSON.parse(localStorage.getItem("cards"));
+        let movedCardID = this.getCardID(movedCard);
+    
+        let newColumn = moveButton.parentNode.id;
+    
+        let numCardsBeforeMB = 0;
+        let prevCard;
+        for (let el of moveButton.parentNode.childNodes) 
+        {
+          if (el === moveButton) { break; }
+          if (el.classList !== undefined && el.classList.contains("card")) 
+          {
+            prevCard = el;
+            numCardsBeforeMB += 1;
+          }
+        }
+        if (numCardsBeforeMB === 0)
+        {
+          let cTemp = cardsLS.splice(movedCardID, 1)[0];
+          cardsLS.splice(0, 0, cTemp);
+          movedCardID = 0;
+        }
+        else 
+        {
+          let prevCardID = this.getCardID(prevCard);
+          
+          let cTemp = cardsLS.splice(movedCardID, 1)[0];
+          cardsLS.splice(prevCardID, 0, cTemp);
+          movedCardID = prevCardID;
+        }
+    
+        cardsLS[movedCardID]["cardColumn"] = newColumn;
+        localStorage.setItem("cards", JSON.stringify(cardsLS));
+    }
 }
