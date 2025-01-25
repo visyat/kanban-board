@@ -18,12 +18,14 @@ export default class Card {
     this.setDescription();
 
     const del_button = this.card.querySelector(".delete");
-    del_button.addEventListener ("click", (event) => {
-      event.target;
-      this.moverObject.stopMoving();
-      storage.deleteCard(this.card)
-      
-      this.card.remove();
+    del_button.addEventListener("click", (event) => {
+      if (confirm("Are you sure you want to delete this card?")) {
+        event.target;
+        this.moverObject.stopMoving();
+        
+        storage.deleteCard(this.card);
+        this.card.remove();
+      }
     });
 
     const edit_button = this.card.querySelector(".edit");
