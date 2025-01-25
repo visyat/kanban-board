@@ -20,9 +20,8 @@ input, button, textarea {
 }
 
 .moving {
-  border: 2px;
-  border-color: black;
-  border-style: solid;
+  border: 2px solid black;
+  transition: border 500ms ease
 }
 
 .card .editTitle {
@@ -58,8 +57,12 @@ input, button, textarea {
 .moveHere {
   font-size: small;
   color:gray;
+  margin-bottom: 0.75em;
+  border-radius: 6px;
+  transition: transform 200ms ease
 }
 .moveHere:hover {
   color:black;
   background-color: #e0e0e0;
+  transform: translateY(-2px);
 }
