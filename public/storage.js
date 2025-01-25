@@ -94,10 +94,15 @@ export default class Storage {
         else 
         {
           let prevCardID = this.getCardID(prevCard);
-          
           let cTemp = cardsLS.splice(movedCardID, 1)[0];
-          cardsLS.splice(prevCardID, 0, cTemp);
-          movedCardID = prevCardID;
+
+          if (prevCardID < movedCardID) { // if moving up ...
+            cardsLS.splice(prevCardID+1, 0, cTemp);
+            movedCardID = prevCardID+1;
+          } else { // if moving down ...
+            cardsLS.splice(prevCardID, 0, cTemp);
+            movedCardID = prevCardID;
+          }
         }
     
         cardsLS[movedCardID]["cardColumn"] = newColumn;
