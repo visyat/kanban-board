@@ -16,4 +16,4 @@ npm run dev
 ```
 
 ## Credit
-This project was built as part of COM SCI 144: Web Applications (Spring '24), taught by Professor Ryan Rosario. Built by Vishal Yathish
+The first iteration of this project built as part of COM SCI 144: Web Applications (Spring '24), taught by Professor Ryan Rosario; have expanded and improved upon the initial design. Built by Vishal Yathish

@@ -3,13 +3,17 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Board | Assignment 2</title>
+    <title>Vishal's Task Board</title>
 
     <!-- This line provides automatic page and style reloading when files change -->
     <script type="module" src="/lib/client/updater.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles2.css">
     <script type="module" src="index.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
     <header>
@@ -39,15 +43,16 @@
     </main>
 
     <!-- Template card to be cloned in JavaScript -->
-    
-    <article class="template card" draggable="true">
+      <article class="template card">
       <h3 class="title">[TEMPLATE]</h3>
+      <textarea class="editTitle hidden"></textarea>
       <p class="description">You should never see this text.</p>
       <textarea class="editDescription hidden"></textarea>
       <div class="buttons">
-        <button class="edit"><img src="icons/edit.svg" alt="Edit" draggable="false"></button>
-        <button class="startMove"><img src="icons/move.svg" alt="Move" draggable="false"></button>
-        <button class="delete"><img src="icons/delete.svg" alt="Delete" draggable="false"></button>
+        <button class="edit"><img src="icons/edit.svg" alt="Edit" draggable="false" title="Edit"></button>
+        <button class="startMove"><img src="icons/move.svg" alt="Move" draggable="false" title="Move"></button>
+        <button class="delete"><img src="icons/delete.svg" alt="Delete" draggable="false" title="Delete"></button>
+        <button class="archive hidden"><img src="icons/archive.svg" alt="Archive" draggable="false" title="Archive"></button>
       </div>
     </article>
   </body>
