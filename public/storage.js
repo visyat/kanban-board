@@ -1,3 +1,10 @@
+import Dexie from 'https://unpkg.com/dexie/dist/dexie.mjs';
+
+export const db = new Dexie("taskboard");
+db.version(1).stores({
+    cards: "++id, column, index, title, color, description",
+});
+
 export default class Storage {
     getTheme() {
         return localStorage.getItem("theme")
@@ -5,74 +12,71 @@ export default class Storage {
     setTheme(theme) {
         localStorage.setItem("theme", theme);
     }
+
+    mapCards(cards) {
+        return cards.map((card, index) => ({
+            "id": undefined,
+            "column": card.cardColumn,
+            "index": index,
+            "title": card.cardTitle,
+            "color": card.cardColor,
+            "description": card.cardDescription
+        }));
+     }
+    async loadFromLocalStorage() {
+        const mappedCards = this.mapCards(JSON.parse(localStorage.getItem("cards")));
+        await db.cards.bulkAdd(mappedCards);
+    }
     
-    getAllCards() {
-        if (localStorage.getItem("cards") === null) {
-            localStorage.setItem("cards", "[]");
-        }
-        const cards = JSON.parse(localStorage.getItem("cards"));
-        return cards;
+    async getAllCards() {
+        return await db.cards.orderBy('index').toArray();
     }
-    addCard(title, color) {
-        let cards = JSON.parse(localStorage.getItem("cards"));
-        let cardData = {
-            cardTitle: `${title}`, 
-            cardColor: `${color}`,
-            cardColumn: "todo",
-            cardDescription: null
-        };
-        cards.push(cardData);
-        localStorage.setItem("cards", JSON.stringify(cards));
+    async addCard(title, color) {
+        let lastIndex = 0;
+        await db.cards.orderBy('index', (todoCards) => {
+            lastIndex = todoCards.at(-1).index + 1;
+        });
+        await db.cards.add({
+            column: "todo",
+            index: lastIndex,
+            title: title,
+            color: color,
+            description: null
+        });
     }
-
+    
     // there has to be a more efficient way of doing this ...
-    getCardID (card, column = card.parentNode.id) {
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
+    async getCardID (card, column = card.parentNode.id) {
         let cTitle = card.querySelector(".title").textContent;
-
         const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
         let cColor = rgba2hex(card.style.background);
-        
-        let cDescription;
-        if (card.querySelector(".description").textContent === "(No description)")
-            cDescription = null;
-        else 
-            cDescription = card.querySelector(".description").textContent; 
-            for (let c of cardsLS) {
-            if (cTitle === c["cardTitle"] && cColor === c["cardColor"] && column === c["cardColumn"] && cDescription === c["cardDescription"]) 
-            {
-                return cardsLS.indexOf(c);
-            }
-        }
+
+        let cardID;
+        await db.cards.where("column")
+            .equals(column)
+            .and(card => card.title === cTitle && card.color === cColor).first((card) => {
+                cardID = card.id;
+            });
+        return cardID;
     }
 
-    deleteCard(card) {
-        const cardID = this.getCardID(card)
-
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
-        cardsLS.splice(cardID, 1);
-        localStorage.setItem("cards", JSON.stringify(cardsLS));
+    async deleteCard(card) {
+        const cardID = await this.getCardID(card);
+        await db.cards.where("id").equals(cardID).delete();
     }
-    editCardDescription(desc, card) {
-        const cardID = this.getCardID(card);
-
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
-        cardsLS[cardID]["cardDescription"] = desc;
-        localStorage.setItem("cards", JSON.stringify(cardsLS));
+    async editCardDescription(desc, card) {
+        const cardID = await this.getCardID(card);
+        console.log(cardID);
+        await db.cards.where("id").equals(cardID).modify({ description: desc });
     }
-    editTitle(title, card) {
-        const cardID = this.getCardID(card);
-
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
-        cardsLS[cardID]["cardTitle"] = title;
-        localStorage.setItem("cards", JSON.stringify(cardsLS));
+    async editTitle(title, card) {
+        const cardID = await this.getCardID(card);
+        await db.cards.where("id").equals(cardID).modify({ "title": title });
     }
 
-    moveCard(moveButton, movedCard) {
-        let cardsLS = JSON.parse(localStorage.getItem("cards"));
-        let movedCardID = this.getCardID(movedCard);
-    
-        let newColumn = moveButton.parentNode.id;
+    async moveCard(moveButton, movedCard) {
+        const newColumn = moveButton.parentNode.id;
+        const movedCardID = await this.getCardID(movedCard);
     
         let numCardsBeforeMB = 0;
         let prevCard;
@@ -85,27 +89,18 @@ export default class Storage {
             numCardsBeforeMB += 1;
           }
         }
+
+        await db.cards.where("id").equals(movedCardID).modify({ column: newColumn });
         if (numCardsBeforeMB === 0)
         {
-          let cTemp = cardsLS.splice(movedCardID, 1)[0];
-          cardsLS.splice(0, 0, cTemp);
-          movedCardID = 0;
+            await db.cards.where("id").equals(movedCardID).modify({ index: 0 });
+        } else {
+            let prevCardID = await this.getCardID(prevCard);
+            let cardIndex;
+            await db.cards.where("id").equals(prevCardID).first((card) => {
+                cardIndex = card.index;
+            });
+            await db.cards.where("id").equals(movedCardID).modify({ index: cardIndex });
         }
-        else 
-        {
-          let prevCardID = this.getCardID(prevCard);
-          let cTemp = cardsLS.splice(movedCardID, 1)[0];
-
-          if (prevCardID < movedCardID) { // if moving up ...
-            cardsLS.splice(prevCardID+1, 0, cTemp);
-            movedCardID = prevCardID+1;
-          } else { // if moving down ...
-            cardsLS.splice(prevCardID, 0, cTemp);
-            movedCardID = prevCardID;
-          }
-        }
-    
-        cardsLS[movedCardID]["cardColumn"] = newColumn;
-        localStorage.setItem("cards", JSON.stringify(cardsLS));
     }
 }

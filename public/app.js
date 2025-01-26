@@ -12,14 +12,15 @@ export default class App {
     document.querySelector("html").setAttribute("data-theme", currentThemeSetting);
     document.getElementById("mode").firstChild.setAttribute("src", this.getModeIcon(currentThemeSetting));
 
-    window.addEventListener("load", (event) => {
+    window.addEventListener("load", async (event) => {
       event.target;
-      const cards = storage.getAllCards()
+      // await storage.loadFromLocalStorage();
+      const cards = await storage.getAllCards();
       if (cards.length !== 0) {
         for (const c in cards) {
-          let oldCard = this.addCard(cards[c]["cardColumn"], cards[c]["cardTitle"], cards[c]["cardColor"], c);
-          if (cards[c]["cardDescription"] !== null)
-            oldCard.setDescription(cards[c]["cardDescription"]);
+          let oldCard = this.addCard(cards[c].column, cards[c].title, cards[c].color);
+          if (cards[c].description !== null)
+            oldCard.setDescription(cards[c].description);
         }
       }
     });
