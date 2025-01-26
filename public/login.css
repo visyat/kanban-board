@@ -1,64 +1,118 @@
+:root {
+    --primary: #3b8686;
+    --text: #333333;
+    --background: #f5f5f5;
+    --card: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+  }
+  
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter';
+    background-color: var(--background);
+    color: var(--text);
 }
-
-/* Styles for the login form container */
 .login-form {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: var(--card);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px var(--shadow);
+    width: 100%;
+    max-width: 400px;
     text-align: center;
 }
+.login-form h1 {
+    margin: 0 0 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+}
 
-/* Input and button styling */
 input[type="text"],
 input[type="password"] {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: var(--primary);
 }
 
 button {
-    width: 85%;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #00a89d;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    background-color: var(--primary);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button:hover {
+    background-color: #327373;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+input[type="checkbox"] {
+    margin: 0;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #00a89d;
-}
-
-/* Cookie consent box styling and animation */
 .cookie-consent {
     position: fixed;
-    bottom: 0%; /* Start off screen */
-    left: -100%;
-    width: 100%;
-    background: white;
-    /* line-height: 3; */
-    padding: 5px;
-    padding-bottom: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    padding: 1rem;
     text-align: center;
-    border-top: 1px solid #ddd;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    animation: slideIn 1s forwards;
+    box-shadow: 0 -2px 10px var(--shadow);
+    animation: slideIn 0.5s ease-out;
+}
+.cookie-consent p {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+}
+.cookie-consent button {
+    max-width: 200px;
+    margin: 0 auto;
 }
 
 @keyframes slideIn {
-    from { left: -100%; }
-    to { left: 0%; }
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
+@media (max-width: 480px) {
+    .login-form {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+  
