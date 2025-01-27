@@ -78,6 +78,7 @@ export default class Card {
         this.moverObject.stopMoving();
         this.moverObject.startMoving(this.card);
       }
+      // this.handleArchiveButton();
     });
 
     const title_obj = this.card.querySelector(".title");
@@ -126,6 +127,19 @@ export default class Card {
     const mode = luminance>0.5 ? "light" : "dark";
     if (mode === "dark")
       this.card.classList.add("darkColor");
+  }
+  
+  handleArchiveButton() {
+    const del_button = this.card.querySelector(".delete");
+    const archive_button = this.card.querySelector(".archive");
+    if ((this.card.parentElement) && (this.card.parentElement.id === "done")) {
+      del_button.classList.add("hidden");
+      archive_button.classList.remove("hidden");
+    }
+    archive_button.addEventListener("click", async (event) => {
+      this.card.classList.add("hidden");
+      await this.storage.archiveCard(this.card);
+    });
   }
 
 }

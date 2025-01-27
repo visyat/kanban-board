@@ -30,9 +30,9 @@ export default class Mover {
 
     let move_buttons = document.querySelectorAll(".moveHere");
     move_buttons.forEach ((element) => {
-      element.addEventListener("click", (event) => {
+      element.addEventListener("click", async (event) => {
         event.target;
-        this.storage.moveCard(element, card);
+        await this.storage.moveCard(element, card);
         
         element.parentNode.insertBefore(card, element);
       

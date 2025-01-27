@@ -1,6 +1,13 @@
 import Dexie from 'https://unpkg.com/dexie/dist/dexie.mjs';
 
 export const db = new Dexie("taskboard");
+db.version(2).stores({
+    cards: "++id, column, index, title, color, description, archive"
+}).upgrade(tx => {
+    return tx.table("cards").toCollection().modify(card => {
+        card.archive = false;
+    });
+});
 db.version(1).stores({
     cards: "++id, column, index, title, color, description",
 });
@@ -29,7 +36,7 @@ export default class Storage {
     }
     
     async getAllCards() {
-        return await db.cards.orderBy('index').toArray();
+        return await db.cards.orderBy('index').filter(card => !card.archive).toArray();
     }
     async addCard(title, color) {
         let lastIndex = 0;
@@ -41,7 +48,8 @@ export default class Storage {
             index: lastIndex,
             title: title,
             color: color,
-            description: null
+            description: null,
+            archive: false
         });
     }
     
@@ -66,12 +74,15 @@ export default class Storage {
     }
     async editCardDescription(desc, card) {
         const cardID = await this.getCardID(card);
-        console.log(cardID);
         await db.cards.where("id").equals(cardID).modify({ description: desc });
     }
     async editTitle(title, card) {
         const cardID = await this.getCardID(card);
         await db.cards.where("id").equals(cardID).modify({ "title": title });
+    }
+    async archiveCard(card) {
+        const cardID = await this.getCardID(card);
+        await db.cards.where("id").equals(cardID).modify({ "archive": true });
     }
 
     async moveCard(moveButton, movedCard) {
@@ -100,7 +111,7 @@ export default class Storage {
             await db.cards.where("id").equals(prevCardID).first((card) => {
                 cardIndex = card.index;
             });
-            await db.cards.where("id").equals(movedCardID).modify({ index: cardIndex });
+            await db.cards.where("id").equals(movedCardID).modify({ index: cardIndex+1 });
         }
     }
 }

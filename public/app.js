@@ -53,6 +53,7 @@ export default class App {
     let newCard = new Card(title, color);
     let mover = new Mover();
     newCard.addToCol(col, mover);
+    newCard.handleArchiveButton();
     return newCard;
   }
 
