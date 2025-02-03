@@ -4,6 +4,7 @@ const NO_DESCRIPTION_TEXT = "(No description)";
 export default class Card {
   constructor(title, color) {
     const storage = new Storage();
+    this.storage = storage;
 
     let templateCard = document.querySelector(".template");
     let clone = templateCard.cloneNode(true); 

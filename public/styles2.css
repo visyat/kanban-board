@@ -2,23 +2,29 @@
     --color-bg: white;
     --color-navbar: #202020;
     --color-navbar-buttons:rgba(255, 255, 255, 0.2);
+    --color-navbar-button-hover:hsla(0, 0%, 100%, 0.369);
+    --settings-buttons: rgba(21, 21, 21, 0.35);
     --color-header-text:white;
     --color-todo-done: #f0f0f0;
     --color-doing: white;
     --color-column-titles: black;
     --color-card-bg: #ffffff;
     --color-card-shadow: rgba(0, 0, 0, 0.446);
+    --navbar-button-filter: invert();
 }
 [data-theme="dark"] {
     --color-bg: #202020;
     --color-navbar: white;
     --color-navbar-buttons:rgba(45, 45, 45, 0.2);
+    --color-navbar-button-hover:rgba(45, 45, 45, 0.372);
+    --settings-buttons: rgba(81, 81, 81, 0.2);
     --color-header-text:black;
     --color-todo-done: #3b3b3b;
     --color-doing: #202020;
     --color-column-titles: white;
     --color-card-bg: #333333;
     --color-card-shadow: rgba(255, 255, 255, 0.473);
+    --navbar-button-filter: none;
 }
 
 body {
@@ -80,10 +86,33 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
 }
+#addButton:hover {
+    background-color: var(--color-navbar-button-hover);
+}
 
-#mode {
+.setting {
     background-color: inherit;
     border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    filter: var(--navbar-button-filter);
+    height: 2rem;
+}
+.setting:hover {
+    background-color: var(--settings-buttons);
+}
+#logout {
+    background-color: var(--color-navbar-buttons);
+    color: var(--color-header-text);
+    padding: 0.25rem 1rem;
+    margin-left: 3rem;
+    height: 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+#logout:hover {
+    background-color: var(--color-navbar-button-hover);
 }
 
 #board {

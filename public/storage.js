@@ -40,9 +40,8 @@ export default class Storage {
     }
     async addCard(title, color) {
         let lastIndex = 0;
-        await db.cards.orderBy('index', (todoCards) => {
-            lastIndex = todoCards.at(-1).index + 1;
-        });
+        const lastCard = await db.cards.orderBy('index').reverse().first();
+        lastIndex = lastCard ? lastCard.index + 1 : 0;
         await db.cards.add({
             column: "todo",
             index: lastIndex,
@@ -104,6 +103,7 @@ export default class Storage {
         await db.cards.where("id").equals(movedCardID).modify({ column: newColumn });
         if (numCardsBeforeMB === 0)
         {
+            await db.cards.where("column").equals(newColumn).modify(card => { card.index += 1 });
             await db.cards.where("id").equals(movedCardID).modify({ index: 0 });
         } else {
             let prevCardID = await this.getCardID(prevCard);
@@ -111,6 +111,8 @@ export default class Storage {
             await db.cards.where("id").equals(prevCardID).first((card) => {
                 cardIndex = card.index;
             });
+            // decrement indices of cards below prevCard 
+            await db.cards.where("column").equals(newColumn).and(card => card.index > cardIndex).modify(card => { card.index += 1 });
             await db.cards.where("id").equals(movedCardID).modify({ index: cardIndex+1 });
         }
     }
