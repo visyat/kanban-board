@@ -40,6 +40,13 @@ export default class Mover {
         move_buttons.forEach((el)=>{
           el.remove(); 
         });
+
+        const del_button = card.querySelector(".delete");
+        const archive_button = card.querySelector(".archive");
+        if ((card.parentElement) && (card.parentElement.id === "done")) {
+          del_button.classList.add("hidden");
+          archive_button.classList.remove("hidden");
+        }
       });
     });
   }
